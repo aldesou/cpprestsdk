@@ -471,6 +471,11 @@ will_deref_and_erase_t asio_server_connection::handle_http_line(const boost::sys
             m_close = true;
         }
 
+        if(m_ssl_stream)
+        {
+            m_request._set_client_ssl(m_ssl_stream->native_handle());
+        }
+
         return handle_headers();
     }
 }
