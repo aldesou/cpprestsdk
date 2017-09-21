@@ -312,6 +312,11 @@ void connection::handle_http_line(const boost::system::error_code& ec)
             m_close = true;
         }
 
+        if(m_ssl_stream)
+        {
+            m_request._set_client_ssl(m_ssl_stream->native_handle());
+        }
+
         handle_headers();
     }
 }
