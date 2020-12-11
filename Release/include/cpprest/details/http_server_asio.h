@@ -89,7 +89,18 @@ public:
             m_ssl_context = utility::details::make_unique<boost::asio::ssl::context>(boost::asio::ssl::context::sslv23);
             ssl_context_callback(*m_ssl_context);
             m_ssl_stream = utility::details::make_unique<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&>>(*m_socket, *m_ssl_context);
-            m_ssl_stream->async_handshake(boost::asio::ssl::stream_base::server, [this](const boost::system::error_code&) { this->start_request_response(); });
+
+            m_ssl_stream->async_handshake(boost::asio::ssl::stream_base::server, [this](const boost::system::error_code& ec) 
+            {
+                if(ec.value() == boost::system::errc::success)
+                {
+                    this->start_request_response(); 
+                } 
+                else 
+                {
+                    this->finish_request_response(); 
+                }
+            });
         }
         else 
         {
