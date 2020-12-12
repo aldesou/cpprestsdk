@@ -186,9 +186,15 @@ public:
             }
             m_ssl_stream = utility::details::make_unique<ssl_stream>(*m_socket, *m_ssl_context);
 
-            m_ssl_stream->async_handshake(boost::asio::ssl::stream_base::server, [this](const boost::system::error_code&)
+            m_ssl_stream->async_handshake(boost::asio::ssl::stream_base::server, [this](const boost::system::error_code& ec)
             {
-                (will_deref_and_erase_t)this->start_request_response();
+                if(ec.value() == boost::system::errc::success)
+                {
+                    (will_deref_and_erase_t)this->start_request_response();
+                }
+                else{
+                    (will_deref_and_erase_t)this->finish_request_response();
+                }
             });
             return will_deref_and_erase_t{};
         }
