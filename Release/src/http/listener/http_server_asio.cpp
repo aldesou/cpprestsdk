@@ -188,6 +188,8 @@ public:
 
             m_ssl_stream->async_handshake(boost::asio::ssl::stream_base::server, [this](const boost::system::error_code& ec)
             {
+                OPENSSL_thread_stop();
+                
                 if(ec.value() == boost::system::errc::success)
                 {
                     (will_deref_and_erase_t)this->start_request_response();
