@@ -390,7 +390,17 @@ public:
 
             m_ssl_stream->async_handshake(
                 boost::asio::ssl::stream_base::server,
-                [this](const boost::system::error_code&) { (will_deref_and_erase_t) this->start_request_response(); });
+                [this](const boost::system::error_code&) 
+                { 
+                    if (ec)
+                    {
+                        (will_deref_and_erase_t) this->finish_request_response(); 
+                    }
+                    else
+                    {
+                        (will_deref_and_erase_t) this->start_request_response(); 
+                    }
+                });
             unique_reference.release();
             return will_erase_from_parent_t {};
         }
