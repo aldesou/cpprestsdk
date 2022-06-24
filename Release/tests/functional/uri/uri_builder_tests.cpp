@@ -493,6 +493,28 @@ TEST(append_query_locale, "Ignore:Android", "Locale unsupported on Android")
     VERIFY_ARE_EQUAL(expected, builder.query());
 }
 
+TEST(ip_literals)
+{
+    {
+        uri_builder builder(U("http://127.0.0.1:4567/"));
+        VERIFY_IS_TRUE(builder.is_valid());
+        VERIFY_ARE_EQUAL(U("127.0.0.1"), builder.host());
+    }
+    {
+        uri_builder builder(U("http://[::1]:4567/"));
+        VERIFY_IS_TRUE(builder.is_valid());
+        VERIFY_ARE_EQUAL(U("[::1]"), builder.host());
+    }
+    {
+        // Missing start character
+        VERIFY_THROWS(uri_builder(U("http://::1]:4567/")), uri_exception);
+    }
+    {
+        // Missing end character
+        VERIFY_THROWS(uri_builder(U("http://[::1:4567/")), uri_exception);
+    }
+}
+
 } // SUITE(uri_builder_tests)
 
 }}}

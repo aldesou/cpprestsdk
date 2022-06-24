@@ -171,11 +171,23 @@ public:
     {
         m_all_connections_complete.set();
 
-        std::istringstream hostport_in(hostport);
-        hostport_in.imbue(std::locale::classic());
+        std::string::size_type hs = hostport.find('[');
+        if (hs != std::string::npos)
+        {
+            std::string::size_type he = hostport.find(']');
+            m_host = hostport.substr(hs+1, he-hs-1);
 
-        std::getline(hostport_in, m_host, ':');
-        std::getline(hostport_in, m_port);
+            std::string::size_type ps = hostport.find(':', he+1);
+            m_port = hostport.substr(ps+1);
+        }
+        else
+        {
+            std::istringstream hostport_in(hostport);
+            hostport_in.imbue(std::locale::classic());
+
+            std::getline(hostport_in, m_host, ':');
+            std::getline(hostport_in, m_port);
+        }
     }
 
     ~hostport_listener()

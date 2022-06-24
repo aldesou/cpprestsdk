@@ -252,7 +252,7 @@ bool inner_parse(
         // or by EOS. The authority could be empty ('file:///C:\file_name.txt')
         for (;*p != _XPLATSTR('/') && *p != _XPLATSTR('?') && *p != _XPLATSTR('#') && *p != _XPLATSTR('\0'); p++)
         {
-            // We're NOT currently supporting IPv6, IPvFuture or username/password in authority
+            // We're NOT currently supporting username/password in authority
             if (!is_authority_character(*p))
             {
                 return false;
@@ -301,6 +301,19 @@ bool inner_parse(
             {
                 uinfo_end = uinfo_begin = nullptr;
             }
+        }
+    }
+
+    if (*host_begin != nullptr && *host_end != nullptr)
+    {
+        const utility::char_t *h_first = *host_begin;
+        const utility::char_t *h_last = *host_end-1;
+
+        // Validate IPv6 literals are fully enclosed in brackets
+        if ((*h_first == _XPLATSTR('[') && *h_last != _XPLATSTR(']'))
+            || (*h_first != _XPLATSTR('[') && *h_last == _XPLATSTR(']')))
+        {
+            return false;
         }
     }
 

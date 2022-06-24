@@ -527,6 +527,31 @@ XzJTD4slrGSJrcpLt/g/Jqqdjg==
     listener.close().wait();
 }
 #endif
+
+TEST_FIXTURE(uri_address, ip_literal_listeners)
+{
+    {
+        http_listener listener(U("http://127.0.0.1:34568/"));
+        listener.open().wait();
+        listener.close().wait();
+    }
+    {
+        http_listener listener(U("http://0.0.0.0:34569/"));
+        listener.open().wait();
+        listener.close().wait();
+    }
+    {
+        http_listener listener(U("http://[::1]:34570/"));
+        listener.open().wait();
+        listener.close().wait();
+    }
+    {
+        http_listener listener(U("http://[::]:34571/"));
+        listener.open().wait();
+        listener.close().wait();
+    }
+}
+
 }
 
 }}}}

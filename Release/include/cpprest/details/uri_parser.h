@@ -155,13 +155,12 @@ namespace web { namespace details
         /// - The percent character ('%'), and thus any percent-endcoded octet
         /// - The sub-delimiters
         /// - ':' (colon)
-        ///
-        /// Note that we don't currently support:
-        /// - IPv6 addresses (requires '[]')
+        /// - '[' (open bracket)
+        /// - ']' (close bracket)
         /// </summary>
         inline bool is_authority_character(int c)
         {
-            return is_unreserved(c) || is_sub_delim(c) || c == '%' || c == '@' || c == ':';
+            return is_unreserved(c) || is_sub_delim(c) || c == '%' || c == '@' || c == ':' || c == '[' || c == ']';
         }
 
         /// <summary>
